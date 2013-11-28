@@ -1,0 +1,16 @@
+#!/usr/bin/env alpaca
+
+def login (username, password) {
+  visit("http://www.pixiv.net")
+  fill("#login_pixiv_id", username)
+  fill("#login_password", password)
+  submit()
+}
+
+var username = $PIXIV_USER
+var password = $PIXIV_PASSWORD
+
+login(username, password)
+fill("input[name=word]", "！すでのな")
+submit()
+
