@@ -75,7 +75,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def linkTextSelector: Parser[Selector] = selector("link") ^^ LinkText
 
-  def partialLinkTextSelector: Parser[Selector] = "partialLink" ~> string ^^ PartialLinkText
+  def partialLinkTextSelector: Parser[Selector] = selector("partialLink") ^^ PartialLinkText
 
   def xpathSelector = selector("xpath") ^^ XPath
 
