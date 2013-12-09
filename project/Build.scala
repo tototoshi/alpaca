@@ -13,7 +13,7 @@ object AlpacaBuild extends Build {
     id = "lang",
     base = file ("lang"),
     settings = Defaults.defaultSettings ++ Seq (
-      name := "alpaca-lang",
+      name := "alpaca",
       organization := "com.github.tototoshi",
       version := "0.1.0-SNAPSHOT",
       scalaVersion := "2.10.2",
