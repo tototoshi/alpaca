@@ -15,6 +15,8 @@
  */
 package alpaca
 
+import org.openqa.selenium.WebElement
+
 sealed trait Tpe
 case object BooleanType extends Tpe
 case object StringType extends Tpe
@@ -22,14 +24,16 @@ case object IntType extends Tpe
 case object UnitType extends Tpe
 case object AnyType extends Tpe
 case object ListType extends Tpe
-
+case object WebElementType extends Tpe
 case class Value(tpe: Tpe, get: Any)
 
 object Value {
   val nullValue = Value(UnitType, {})
   def intValue(i: Int) = Value(IntType, i)
+  def stringValue(s: String) = Value(StringType, s)
   val trueValue = Value(BooleanType, true)
   val falseValue = Value(BooleanType, false)
+  def webElementValue(elem: WebElement) = Value(WebElementType, elem)
 
   def asInt(v: Value): Int = {
     v match {
@@ -40,6 +44,11 @@ object Value {
   }
 
   def asString(v: Value): String = v.get.toString
+
+  def asWebElement(v: Value): WebElement = v match {
+    case Value(WebElementType, elem) => elem.asInstanceOf[WebElement]
+    case _ => throw new TypeException(s"Can't convert ${v.get} to WebElement")
+  }
 
 }
 
