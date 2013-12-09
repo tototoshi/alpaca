@@ -29,9 +29,16 @@ class UndefinedVariableException(variable: Symbol) extends RuntimeException with
 
 }
 
+class InvalidArgumentSizeException(functionName: Symbol, expected: Int, actual: Int) extends RuntimeException with AlpacaRuntimeException {
+
+  override def getMessage: String = s"$functionName takes $expected parameters, but $actual passed."
+
+}
+
 class TypeException(message: String) extends RuntimeException(message) with AlpacaRuntimeException {
 }
 
 class SyntaxError(message: String) extends Exception(message)
 
 class UnexpectedException(message: String) extends RuntimeException(message)
+

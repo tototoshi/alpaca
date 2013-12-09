@@ -137,7 +137,11 @@ object Interpreter extends Logging {
         }
 
         lookupEmbeddedFunctions(name).map {
-          f => f(args.map(arg => evaluate(arg)))
+          f =>
+            {
+              logger.info(args.map(arg => evaluate(arg)).toString)
+              f(args.map(arg => evaluate(arg)))
+            }
         } getOrElse {
           callUserFunc(name, args)
         }
