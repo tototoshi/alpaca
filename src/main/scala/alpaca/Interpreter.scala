@@ -54,7 +54,7 @@ object Interpreter extends Logging {
     retval
   }
 
-  def lookupEmbeddedFunctions(name: Symbol)(implicit env: Environment): Option[List[Value] => Value] =
+  def lookupEmbeddedFunctions(name: Symbol)(implicit env: Environment): Option[List[Value] => Environment => Value] =
     EmbeddedFunctions.allAsMap.get(name)
 
   def evaluate(expr: AST)(implicit environment: Environment): Value = {
@@ -137,11 +137,7 @@ object Interpreter extends Logging {
         }
 
         lookupEmbeddedFunctions(name).map {
-          f =>
-            {
-              logger.info(args.map(arg => evaluate(arg)).toString)
-              f(args.map(arg => evaluate(arg)))
-            }
+          f => f(args.map(arg => evaluate(arg)))(environment)
         } getOrElse {
           callUserFunc(name, args)
         }

@@ -33,7 +33,7 @@ object Value {
 
   def asInt(v: Value): Int = {
     v match {
-      case Value(IntType, i) => i
+      case Value(IntType, i) => i.asInstanceOf[Int]
       case Value(StringType, s) => s.asInstanceOf[String].toInt
       case _ => throw new TypeException(s"Can't convert ${v.get} to int")
     }
