@@ -1,0 +1,6 @@
+--TEST--
+print 1
+--FILE--
+print 1
+--EXPECT--
+1

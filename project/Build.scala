@@ -33,13 +33,16 @@ object AlpacaBuild extends Build {
   )
 
   lazy val test = Project (
-    id = "test",
-    base = file ("test"),
+    id = "testkit",
+    base = file ("testkit"),
     settings = Defaults.defaultSettings ++ Seq (
       name := "alpaca-lang-test",
       organization := "com.github.tototoshi",
       version := "0.1.0-SNAPSHOT",
-      scalaVersion := "2.10.2"
+      scalaVersion := "2.10.2",
+      libraryDependencies ++= Seq(
+        "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+      )
     )
   )
 
