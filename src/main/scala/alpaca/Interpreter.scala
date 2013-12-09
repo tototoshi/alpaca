@@ -178,6 +178,26 @@ object Interpreter extends Logging {
         }
         Value.nullValue
       }
+      case EqualOps(left, right) => {
+        if (evaluate(left).get == evaluate(right).get) Value.trueValue else Value.falseValue
+      }
+      case LessOps(left, right) => {
+        if (evaluate(left).get.toString.toInt < evaluate(right).get.toString.toInt)
+          Value.trueValue
+        else
+          Value.falseValue
+      }
+      case If(cond, ifStatements, elseStatements) => {
+        val bool = evaluate(cond) match {
+          case c if c.tpe == BooleanType => c.get.asInstanceOf[Boolean]
+          case _ => throw new TypeException("Condition must return boolean value")
+        }
+        if (bool) {
+          evaluateStatements(ifStatements)
+        } else {
+          evaluateStatements(elseStatements)
+        }
+      }
       case Println(ast) => {
         println(evaluate(ast).get)
         Value.nullValue

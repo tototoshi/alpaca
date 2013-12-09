@@ -69,6 +69,12 @@ object AST {
 
   case class ListAccess(name: Symbol, index: Int) extends AST
 
+  case class If(cond: AST, ifStatements: List[AST], elseStatements: List[AST]) extends AST
+
+  case class EqualOps(left: AST, right: AST) extends AST
+
+  case class LessOps(left: AST, right: AST) extends AST
+
   case class Foreach(array: AST, name: Symbol, statements: List[AST]) extends AST
 
   case class Println(value: AST) extends AST

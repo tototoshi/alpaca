@@ -95,7 +95,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def factor: Parser[AST] = string | array | arrayAccess | variable
 
-  def expression: Parser[AST] = op | shellExec | functionCall | factor
+  def expression: Parser[AST] = ifElseExp | op | shellExec | functionCall | factor
 
   def plusOps: Parser[AST] = factor ~ "+" ~ expression ^^ {
     case x ~ _ ~ y => PlusOps(x, y)
@@ -164,6 +164,20 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
   }
 
   def printLn: Parser[AST] = "print" ~> expression ^^ Println
+
+  def equalOps: Parser[AST] = expression ~ "==" ~ expression ^^ {
+    case leftExpression ~ _ ~ rightExpression => EqualOps(leftExpression, rightExpression)
+  }
+
+  def lessOps: Parser[AST] = expression ~ "<" ~ expression ^^ {
+    case leftExpression ~ _ ~ rightExpression => LessOps(leftExpression, rightExpression)
+  }
+
+  def compareOps: Parser[AST] = equalOps | lessOps
+
+  def ifElseExp: Parser[AST] = "if" ~> parentheses(compareOps) ~ between("{", script, "}") ~ opt("else" ~> between("{", script, "}")) ^^ {
+    case cond ~ ifStatements ~ elseStatements => If(cond, ifStatements, elseStatements.getOrElse(Nil))
+  }
 
   def foreach: Parser[AST] = "foreach" ~> parentheses((array | variable) ~ "as" ~ variableName) ~ between("{", script, "}") ^^ {
     case a ~ _ ~ b ~ c => {

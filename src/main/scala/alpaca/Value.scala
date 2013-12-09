@@ -16,7 +16,9 @@
 package alpaca
 
 sealed trait Tpe
+case object BooleanType extends Tpe
 case object StringType extends Tpe
+case object IntType extends Tpe
 case object UnitType extends Tpe
 case object AnyType extends Tpe
 case object ListType extends Tpe
@@ -25,5 +27,8 @@ case class Value(tpe: Tpe, get: Any)
 
 object Value {
   val nullValue = Value(UnitType, {})
+  def intValue(i: Int) = Value(IntType, i)
+  val trueValue = Value(BooleanType, true)
+  val falseValue = Value(BooleanType, false)
 }
 
