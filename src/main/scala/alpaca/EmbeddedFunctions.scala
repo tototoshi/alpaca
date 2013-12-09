@@ -19,7 +19,7 @@ object EmbeddedFunctions {
     if (args.size != 1) {
       throw new InvalidArgumentSizeException('sleep, 1, args.size)
     }
-    Thread.sleep(args(0).get.toString.toInt)
+    Thread.sleep(Value.asInt(args(0)))
     Value.nullValue
   }
 }

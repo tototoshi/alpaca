@@ -30,5 +30,16 @@ object Value {
   def intValue(i: Int) = Value(IntType, i)
   val trueValue = Value(BooleanType, true)
   val falseValue = Value(BooleanType, false)
+
+  def asInt(v: Value): Int = {
+    v match {
+      case Value(IntType, i) => i
+      case Value(StringType, s) => s.asInstanceOf[String].toInt
+      case _ => throw new TypeException(s"Can't convert ${v.get} to int")
+    }
+  }
+
+  def asString(v: Value): String = v.get.toString
+
 }
 

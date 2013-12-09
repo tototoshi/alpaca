@@ -198,7 +198,7 @@ object Interpreter extends Logging {
         if (evaluate(left).get == evaluate(right).get) Value.trueValue else Value.falseValue
       }
       case LessOps(left, right) => {
-        if (evaluate(left).get.toString.toInt < evaluate(right).get.toString.toInt)
+        if (Value.asInt(evaluate(left)) < Value.asInt(evaluate(right)))
           Value.trueValue
         else
           Value.falseValue
