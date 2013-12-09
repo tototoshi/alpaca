@@ -54,6 +54,16 @@ object Interpreter extends Logging {
     retval
   }
 
+  def lookupEmbeddedFunctions(name: Symbol, args: List[AST])(implicit env: Environment): Option[List[AST] => Value] = {
+    def len(args: List[AST]): Value = {
+      Value.intValue(evaluateStatements(args).get.asInstanceOf[List[_]].size)
+    }
+    val embeddedFunctions = Map(
+      'len -> len _
+    )
+    embeddedFunctions.get(name)
+  }
+
   def evaluate(expr: AST)(implicit environment: Environment): Value = {
     expr match {
       case StringFactor(s) => {
@@ -122,13 +132,22 @@ object Interpreter extends Logging {
         Value.nullValue
       }
       case FunctionCall(name, args) => {
-        val f = environment.getFunction(name).getOrElse(throw new UndefinedFunctionException(name))
-        val localEnvironment = new LocalEnvironment(environment, environment.scriptPath)
-        f.args.zip(args).foreach {
-          case (argName, argValue) =>
-            evaluate(Assignment(argName, argValue))(localEnvironment)
+
+        def callUserFunc(name: Symbol, args: List[AST]): Value = {
+          val f = environment.getFunction(name).getOrElse(throw new UndefinedFunctionException(name))
+          val localEnvironment = new LocalEnvironment(environment, environment.scriptPath)
+          f.args.zip(args).foreach {
+            case (argName, argValue) =>
+              evaluate(Assignment(argName, argValue))(localEnvironment)
+          }
+          evaluateStatements(f.statements)(localEnvironment)
         }
-        evaluateStatements(f.statements)(localEnvironment)
+
+        lookupEmbeddedFunctions(name, args).map {
+          f => f(args)
+        } getOrElse {
+          callUserFunc(name, args)
+        }
       }
       case Close => {
         environment.driver.close()
