@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-./sbt "testkit/run $(ls -1 test/*.alpacat)"
+cd $(dirname $0)
+./sbt 'project lang' startScript "testkit/run $(ls -1 test/*.alpacat)"

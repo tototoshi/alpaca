@@ -3,8 +3,9 @@ package alpaca.test
 import scala.io.Source
 import java.io.{ PrintWriter, File }
 import scala.sys.process._
+import com.typesafe.scalalogging.slf4j.Logging
 
-object AlpacaTestkit {
+object AlpacaTestkit extends Logging {
 
   def main(args: Array[String]): Unit = {
     def lines(file: String) = Source.fromFile(file).getLines()
@@ -31,7 +32,12 @@ object AlpacaTestkit {
       val p = Process(List(command, "-q", f.getCanonicalPath))
       val out = p.lines.mkString("\n")
 
-      assert(out.trim == expected.trim, s"$test failed")
+      if (out.trim == expected.trim) {
+        logger.info(s"Test $test passed")
+      } else {
+        logger.error(s"$test failed")
+        logger.error(s"$expected expected, but $out given")
+      }
     }
 
   }

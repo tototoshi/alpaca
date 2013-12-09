@@ -1,0 +1,9 @@
+--TEST--
+assignment
+--FILE--
+def abc(a) {
+  print a
+}
+abc(123)
+--EXPECT--
+123

@@ -9,6 +9,12 @@ object AlpacaBuild extends Build {
     base = file(".")
   ).aggregate(lang)
 
+  lazy val baseDependency = Seq(
+    "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
+    "ch.qos.logback" % "logback-classic" % "1.0.13",
+    "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+  )
+
   lazy val lang = Project (
     id = "lang",
     base = file ("lang"),
@@ -21,12 +27,9 @@ object AlpacaBuild extends Build {
         "org.scalatest" %% "scalatest" % "1.9.1" % "test"
       ),
       resolvers += Resolver.sonatypeRepo("public"),
-      libraryDependencies ++= Seq(
+      libraryDependencies ++= baseDependency ++ Seq(
       "org.seleniumhq.selenium" % "selenium-java" % "2.37.1",
-      "com.github.scopt" %% "scopt" % "3.2.0",
-      "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
-      "ch.qos.logback" % "logback-classic" % "1.0.13",
-      "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+      "com.github.scopt" %% "scopt" % "3.2.0"
       ),
       scalacOptions ++= Seq("-deprecation", "-language:_")
     ) ++ SbtStartScript.startScriptForClassesSettings
@@ -36,13 +39,11 @@ object AlpacaBuild extends Build {
     id = "testkit",
     base = file ("testkit"),
     settings = Defaults.defaultSettings ++ Seq (
-      name := "alpaca-lang-test",
+      name := "alpaca-test",
       organization := "com.github.tototoshi",
       version := "0.1.0-SNAPSHOT",
       scalaVersion := "2.10.2",
-      libraryDependencies ++= Seq(
-        "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
-      )
+      libraryDependencies ++= baseDependency
     )
   )
 

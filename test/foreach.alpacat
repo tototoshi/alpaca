@@ -1,0 +1,10 @@
+--TEST--
+foreach
+--FILE--
+foreach ([1, 2, 3] as i) {
+  print i
+}
+--EXPECT--
+1
+2
+3
