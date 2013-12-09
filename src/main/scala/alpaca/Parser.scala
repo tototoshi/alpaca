@@ -81,7 +81,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def cssSelector: Parser[Selector] = selector("css") ^^ Css
 
-  def stringSelector: Parser[Selector] = stringLiteral ^^ Css
+  def stringSelector: Parser[Selector] = expression ^^ Css
 
   def selector: Parser[Selector] =
     nameSelector |
