@@ -20,6 +20,7 @@ import org.openqa.selenium.firefox.{ FirefoxProfile, FirefoxDriver }
 import java.io.File
 import com.typesafe.scalalogging.slf4j._
 import scala.util.control.NonFatal
+import java.util.concurrent.TimeUnit
 
 object Alpaca extends Logging {
 
@@ -97,6 +98,7 @@ object Alpaca extends Logging {
         logger.info(config.toString)
         logger.info("Opening brower...")
         val driver = createDriver(config.profile)
+
         if (config.maximize) {
           driver.manage().window().maximize()
         }

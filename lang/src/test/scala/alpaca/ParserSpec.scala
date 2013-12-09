@@ -17,7 +17,6 @@ package alpaca
 
 import org.scalatest.{ OptionValues, ShouldMatchers, FunSpec }
 import alpaca.AST._
-import Parser
 
 class ParserSpec extends FunSpec with ShouldMatchers with OptionValues {
 
@@ -26,18 +25,18 @@ class ParserSpec extends FunSpec with ShouldMatchers with OptionValues {
     result.get should be(StringFactor("abc"))
   }
 
-  it("should parse 'go to'") {
-    val result = Parser.parse("go to \"http://github.com\"")
+  it("should parse 'visit'") {
+    val result = Parser.parse("visit(\"http://github.com\")")
     result should be(List(GoTo(StringFactor("http://github.com"))))
   }
 
-  it("should parse 'fill with'") {
-    val result = Parser.parse("""fill name("email") with "foo@example.com"""")
+  it("should parse 'fill'") {
+    val result = Parser.parse("""fill(name("email"), "foo@example.com")""")
     result should be(List(Fill(Name(StringFactor("email")), StringFactor("foo@example.com"))))
   }
 
   it("should parse 'click'") {
-    val result = Parser.parse("""click "Scala"""")
+    val result = Parser.parse("""click("Scala")""")
     result should be(List(Click(Css(StringFactor("Scala")))))
   }
 
