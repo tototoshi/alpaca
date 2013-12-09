@@ -1,0 +1,1 @@
+packageArchetype.java_application
