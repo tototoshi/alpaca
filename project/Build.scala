@@ -9,7 +9,7 @@ object AlpacaBuild extends Build {
     base = file(".")
   ).aggregate(lang)
 
-  lazy val baseDependency = Seq(
+  val baseDependency = Seq(
     "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
     "ch.qos.logback" % "logback-classic" % "1.0.13",
     "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
@@ -23,9 +23,6 @@ object AlpacaBuild extends Build {
       organization := "com.github.tototoshi",
       version := "0.1.0-SNAPSHOT",
       scalaVersion := "2.10.2",
-      libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest" % "1.9.1" % "test"
-      ),
       resolvers += Resolver.sonatypeRepo("public"),
       libraryDependencies ++= baseDependency ++ Seq(
       "org.seleniumhq.selenium" % "selenium-java" % "2.37.1",
