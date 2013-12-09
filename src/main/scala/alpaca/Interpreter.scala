@@ -23,14 +23,17 @@ import scala.collection.mutable.{ Set => MutableSet, ListBuffer }
 
 object Interpreter extends Logging {
 
-  private def by(selector: Selector)(implicit environment: Environment): By = selector match {
-    case Name(s) => By.name(evaluate(s).get.toString)
-    case Id(s) => By.id(evaluate(s).get.toString)
-    case ClassName(s) => By.className(evaluate(s).get.toString)
-    case Css(s) => By.cssSelector(evaluate(s).get.toString)
-    case LinkText(s) => By.linkText(evaluate(s).get.toString)
-    case PartialLinkText(s) => By.partialLinkText(evaluate(s).get.toString)
-    case XPath(s) => By.xpath(evaluate(s).get.toString)
+  private def by(selector: Selector)(implicit environment: Environment): By = {
+    val (func, args) = selector match {
+      case Name(s) => (By.name _, s)
+      case Id(s) => (By.id _, s)
+      case ClassName(s) => (By.className _, s)
+      case Css(s) => (By.cssSelector _, s)
+      case LinkText(s) => (By.linkText _, s)
+      case PartialLinkText(s) => (By.partialLinkText _, s)
+      case XPath(s) => (By.xpath _, s)
+    }
+    func(Value.asString(evaluate(args)))
   }
 
   type FilePath = String
