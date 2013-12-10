@@ -80,13 +80,17 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def factor: Parser[AST] = string | array | arrayAccess | variable
 
-  def expression: Parser[AST] = ifElseExp | op | shellExec | functionCall | factor
+  def expression: Parser[AST] = binaryOps | ifElseExp | shellExec | functionCall | factor
 
-  def plusOps: Parser[AST] = factor ~ "+" ~ expression ^^ {
-    case x ~ _ ~ y => PlusOps(x, y)
+  def binaryOps: Parser[AST] = ifElseExp | shellExec | functionCall | factor ~ ("+" | "==" | "!=" | "<=" | ">=" | "<" | ">") ~ expression ^^ {
+    case x ~ "+" ~ y => PlusOps(x, y)
+    case x ~ "==" ~ y => EqualOps(x, y)
+    case x ~ "!=" ~ y => NotEqualOps(x, y)
+    case x ~ "<" ~ y => LessOps(x, y)
+    case x ~ ">" ~ y => GreaterOps(x, y)
+    case x ~ "<=" ~ y => LessThanOps(x, y)
+    case x ~ ">=" ~ y => GreaterThanOps(x, y)
   }
-
-  def op: Parser[AST] = plusOps
 
   def fillWith: Parser[AST] = "fill" ~> parentheses(selector ~ "," ~ expression) ^^ {
     case s ~ _ ~ sl => Fill(s, sl)
@@ -141,19 +145,9 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
     case n ~ _ ~ e => Reassignment(n, e)
   }
 
-  def printLn: Parser[AST] = "print" ~> expression ^^ Println
+  def printLn: Parser[AST] = "print" ~> (expression | parentheses(expression)) ^^ Println
 
-  def equalOps: Parser[AST] = expression ~ "==" ~ expression ^^ {
-    case leftExpression ~ _ ~ rightExpression => EqualOps(leftExpression, rightExpression)
-  }
-
-  def lessOps: Parser[AST] = expression ~ "<" ~ expression ^^ {
-    case leftExpression ~ _ ~ rightExpression => LessOps(leftExpression, rightExpression)
-  }
-
-  def compareOps: Parser[AST] = equalOps | lessOps
-
-  def ifElseExp: Parser[AST] = "if" ~> parentheses(compareOps) ~ between("{", script, "}") ~ opt("else" ~> between("{", script, "}")) ^^ {
+  def ifElseExp: Parser[AST] = "if" ~> parentheses(binaryOps) ~ between("{", script, "}") ~ opt("else" ~> between("{", script, "}")) ^^ {
     case cond ~ ifStatements ~ elseStatements => If(cond, ifStatements, elseStatements.getOrElse(Nil))
   }
 

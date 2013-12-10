@@ -73,10 +73,17 @@ object Interpreter extends Logging {
       case PlusOps(left, right) => {
         val l = evaluate(left)
         val r = evaluate(right)
-        if (l.tpe == StringType) {
-          Value(l.tpe, l.get.toString + r.get.toString)
-        } else {
-          throw new UnsupportedOperationException("'+' is not supported")
+        (l, r) match {
+          case (Value(IntType, x), Value(_, y)) => Value.intValue(Value.asInt(l) + Value.asInt(r))
+          case _ => {
+            try {
+              Value.intValue(Value.asInt(l) + Value.asInt(r))
+            } catch {
+              case e: NumberFormatException => {
+                Value.stringValue(Value.asString(l) + Value.asString(r))
+              }
+            }
+          }
         }
       }
       case Fill(selector, text) => {
@@ -169,11 +176,20 @@ object Interpreter extends Logging {
       case EqualOps(left, right) => {
         if (evaluate(left).get == evaluate(right).get) Value.trueValue else Value.falseValue
       }
+      case NotEqualOps(left, right) => {
+        if (evaluate(left).get != evaluate(right).get) Value.trueValue else Value.falseValue
+      }
       case LessOps(left, right) => {
-        if (Value.asInt(evaluate(left)) < Value.asInt(evaluate(right)))
-          Value.trueValue
-        else
-          Value.falseValue
+        Value(BooleanType, Value.asInt(evaluate(left)) < Value.asInt(evaluate(right)))
+      }
+      case LessThanOps(left, right) => {
+        Value(BooleanType, Value.asInt(evaluate(left)) <= Value.asInt(evaluate(right)))
+      }
+      case GreaterOps(left, right) => {
+        Value(BooleanType, Value.asInt(evaluate(left)) > Value.asInt(evaluate(right)))
+      }
+      case GreaterThanOps(left, right) => {
+        Value(BooleanType, Value.asInt(evaluate(left)) >= Value.asInt(evaluate(right)))
       }
       case If(cond, ifStatements, elseStatements) => {
         val bool = evaluate(cond) match {

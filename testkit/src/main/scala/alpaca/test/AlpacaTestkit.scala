@@ -36,7 +36,7 @@ object AlpacaTestkit extends Logging {
         logger.info(s"Test $test passed")
       } else {
         logger.error(s"$test failed")
-        logger.error(s"$expected expected, but $out given")
+        logger.error(s"\n[$expected] expected, but \n[$out] given")
       }
     }
 

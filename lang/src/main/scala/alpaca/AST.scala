@@ -63,7 +63,15 @@ object AST {
 
   case class EqualOps(left: AST, right: AST) extends AST
 
+  case class NotEqualOps(left: AST, right: AST) extends AST
+
   case class LessOps(left: AST, right: AST) extends AST
+
+  case class LessThanOps(left: AST, right: AST) extends AST
+
+  case class GreaterOps(left: AST, right: AST) extends AST
+
+  case class GreaterThanOps(left: AST, right: AST) extends AST
 
   case class Foreach(array: AST, name: Symbol, statements: List[AST]) extends AST
 
