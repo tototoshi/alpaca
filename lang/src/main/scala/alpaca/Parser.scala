@@ -68,29 +68,15 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def nameSelector: Parser[Selector] = selector("name") ^^ Name
 
-  def idSelector: Parser[Selector] = selector("id") ^^ Id
-
-  def classNameSelector: Parser[Selector] = selector("class") ^^ ClassName
-
   def linkTextSelector: Parser[Selector] = selector("link") ^^ LinkText
 
   def partialLinkTextSelector: Parser[Selector] = selector("partialLink") ^^ PartialLinkText
 
   def xpathSelector = selector("xpath") ^^ XPath
 
-  def cssSelector: Parser[Selector] = selector("css") ^^ Css
-
   def stringSelector: Parser[Selector] = expression ^^ Css
 
-  def selector: Parser[Selector] =
-    nameSelector |
-      idSelector |
-      classNameSelector |
-      linkTextSelector |
-      partialLinkTextSelector |
-      cssSelector |
-      xpathSelector |
-      stringSelector
+  def selector: Parser[Selector] = nameSelector | linkTextSelector | partialLinkTextSelector | xpathSelector | stringSelector
 
   def factor: Parser[AST] = string | array | arrayAccess | variable
 

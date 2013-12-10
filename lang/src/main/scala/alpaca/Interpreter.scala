@@ -26,8 +26,6 @@ object Interpreter extends Logging {
   def by(selector: Selector)(implicit environment: Environment): By = {
     val (func, args) = selector match {
       case Name(s) => (By.name _, s)
-      case Id(s) => (By.id _, s)
-      case ClassName(s) => (By.className _, s)
       case Css(s) => (By.cssSelector _, s)
       case LinkText(s) => (By.linkText _, s)
       case PartialLinkText(s) => (By.partialLinkText _, s)

@@ -31,10 +31,6 @@ object AST {
 
   case class Name(selector: AST) extends Selector
 
-  case class Id(selector: AST) extends Selector
-
-  case class ClassName(selector: AST) extends Selector
-
   case class LinkText(selector: AST) extends Selector
 
   case class PartialLinkText(selector: AST) extends Selector
