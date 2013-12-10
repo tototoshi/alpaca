@@ -54,9 +54,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def stringLiteral: Parser[StringFactor] = doubleQuotedString ^^ StringFactor
 
-  def stringAtom: Parser[StringFactor] = intString | stringLiteral | embeddedVariableFactor
-
-  def string: Parser[StringFactor] = stringAtom
+  def string: Parser[StringFactor] = intString | stringLiteral | embeddedVariableFactor
 
   def array: Parser[ListFactor] = between("[", repsep(expression, ","), "]") ^^ {
     case xs => ListFactor(xs)
@@ -82,7 +80,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def expression: Parser[AST] = binaryOps | ifElseExp | shellExec | functionCall | factor
 
-  def binaryOps: Parser[AST] = ifElseExp | shellExec | functionCall | factor ~ ("+" | "==" | "!=" | "<=" | ">=" | "<" | ">") ~ expression ^^ {
+  def binaryOps: Parser[AST] = (ifElseExp | shellExec | functionCall | factor) ~ ("+" | "==" | "!=" | "<=" | ">=" | "<" | ">") ~ expression ^^ {
     case x ~ "+" ~ y => PlusOps(x, y)
     case x ~ "==" ~ y => EqualOps(x, y)
     case x ~ "!=" ~ y => NotEqualOps(x, y)
@@ -147,7 +145,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def printLn: Parser[AST] = "print" ~> (expression | parentheses(expression)) ^^ Println
 
-  def ifElseExp: Parser[AST] = "if" ~> parentheses(binaryOps) ~ between("{", script, "}") ~ opt("else" ~> between("{", script, "}")) ^^ {
+  def ifElseExp: Parser[AST] = "if" ~> parentheses(expression) ~ between("{", script, "}") ~ opt("else" ~> between("{", script, "}")) ^^ {
     case cond ~ ifStatements ~ elseStatements => If(cond, ifStatements, elseStatements.getOrElse(Nil))
   }
 
