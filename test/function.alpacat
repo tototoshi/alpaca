@@ -1,5 +1,5 @@
 --TEST--
-assignment
+function
 --FILE--
 def abc(a) {
   print a

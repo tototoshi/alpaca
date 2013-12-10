@@ -100,14 +100,8 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def click: Parser[Click] = "click" ~> parentheses(selector) ^^ Click
 
-  def statement: Parser[AST] = {
-    (require | assignment | reassignment | foreach | functionDef | printLn | fillWith | click | select) ^^ {
-      case e => {
-        logger.debug("parsed: " + e)
-        e
-      }
-    }
-  }
+  def statement: Parser[AST] =
+    require | assignment | reassignment | foreach | functionDef | printLn | fillWith | click | select
 
   def script: Parser[List[AST]] = rep(statement | expression)
 
@@ -145,9 +139,15 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def printLn: Parser[AST] = "print" ~> (expression | parentheses(expression)) ^^ Println
 
-  def ifElseExp: Parser[AST] = "if" ~> parentheses(expression) ~ between("{", script, "}") ~ opt("else" ~> between("{", script, "}")) ^^ {
-    case cond ~ ifStatements ~ elseStatements => If(cond, ifStatements, elseStatements.getOrElse(Nil))
-  }
+  def ifElseExp: Parser[AST] =
+    ("if" ~>
+      parentheses(expression) ~
+      between("{", script, "}") ~
+      opt("else" ~>
+        (between("{", script, "}") | (ifElseExp ^^ { List(_) }))
+      )) ^^ {
+        case cond ~ ifStatements ~ elseStatements => If(cond, ifStatements, elseStatements.getOrElse(Nil))
+      }
 
   def foreach: Parser[AST] = "foreach" ~> parentheses((array | variable) ~ "as" ~ variableName) ~ between("{", script, "}") ^^ {
     case a ~ _ ~ b ~ c => {
@@ -162,7 +162,10 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
   def shellExec: Parser[AST] = "$(" ~> shellCommand <~ ")" ^^ ShellExec
 
   def parse(in: String): List[AST] = parseAll(script, in) match {
-    case Success(result, _) => result
+    case Success(result, _) => {
+      result.foreach(r => logger.debug(r.toString))
+      result
+    }
     case Failure(error, rest) => {
       throw new SyntaxError(error)
     }

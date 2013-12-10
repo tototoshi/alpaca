@@ -59,6 +59,7 @@ object Interpreter extends Logging {
     EmbeddedFunctions.allAsMap.get(name)
 
   def evaluate(expr: AST)(implicit environment: Environment): Value = {
+    logger.debug(s"Eval: $expr")
     expr match {
       case StringFactor(s) => {
         val embeddedValues =
@@ -112,7 +113,7 @@ object Interpreter extends Logging {
         environment.addFunction(name, f)
         Value.nullValue
       }
-      case FunctionCall(name, args) => {
+      case f @ FunctionCall(name, args) => {
 
         def callUserFunc(name: Symbol, args: List[AST]): Value = {
           val f = environment.getFunction(name).getOrElse(throw new UndefinedFunctionException(name))
@@ -124,11 +125,14 @@ object Interpreter extends Logging {
           evaluateStatements(f.statements)(localEnvironment)
         }
 
-        lookupEmbeddedFunctions(name).map {
+        val result = lookupEmbeddedFunctions(name).map {
           f => f(args.map(arg => evaluate(arg)))(environment)
         } getOrElse {
           callUserFunc(name, args)
         }
+
+        logger.debug(s"FunctionCall: $f, Result: $result")
+        result
       }
       case Require(file) => {
         val originalScriptPath = environment.scriptPath
@@ -174,10 +178,10 @@ object Interpreter extends Logging {
         Value.nullValue
       }
       case EqualOps(left, right) => {
-        if (evaluate(left).get == evaluate(right).get) Value.trueValue else Value.falseValue
+        if (Value.eq(evaluate(left), evaluate(right))) Value.trueValue else Value.falseValue
       }
       case NotEqualOps(left, right) => {
-        if (evaluate(left).get != evaluate(right).get) Value.trueValue else Value.falseValue
+        if (!Value.eq(evaluate(left), evaluate(right))) Value.trueValue else Value.falseValue
       }
       case LessOps(left, right) => {
         Value(BooleanType, Value.asInt(evaluate(left)) < Value.asInt(evaluate(right)))
@@ -231,6 +235,7 @@ object Interpreter extends Logging {
         Value(StringType, out)
       }
     }
+
   }
 
 }

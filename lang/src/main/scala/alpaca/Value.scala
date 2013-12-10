@@ -57,5 +57,12 @@ object Value {
     case _ => throw new TypeException(s"Can't convert ${v.get} to WebElement")
   }
 
+  def eq(v1: Value, v2: Value): Boolean = {
+    (v1, v2) match {
+      case (Value(IntType, x), Value(IntType, y)) => x.asInstanceOf[Int] == y.asInstanceOf[Int]
+      case (x, y) => Value.asString(x) == Value.asString(y)
+    }
+  }
+
 }
 
