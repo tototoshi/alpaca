@@ -41,6 +41,18 @@ def login(user, password) {
 login(user, password)
 ```
 
+## if-else
+
+```c
+if (len(args) == 1) {
+  print 1
+} else if (len(args) == 2) {
+  print 2
+} else {
+  print 0
+}
+```
+
 ## Load other files
 
 ```ruby
