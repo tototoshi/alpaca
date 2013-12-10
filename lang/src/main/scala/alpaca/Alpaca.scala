@@ -19,8 +19,6 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.{ FirefoxProfile, FirefoxDriver }
 import java.io.File
 import com.typesafe.scalalogging.slf4j._
-import scala.util.control.NonFatal
-import java.util.concurrent.TimeUnit
 
 object Alpaca extends Logging {
 

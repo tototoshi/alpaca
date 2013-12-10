@@ -18,7 +18,6 @@ package alpaca
 import scala.util.parsing.combinator.RegexParsers
 import AST._
 import com.typesafe.scalalogging.slf4j.Logging
-import scala.util.matching.Regex
 
 trait BetweenParser extends RegexParsers with Logging {
 
@@ -113,20 +112,13 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def click: Parser[Click] = "click" ~> parentheses(selector) ^^ Click
 
-  def close: Parser[AST] = "close" ~ "(" ~ ")" ^^ { _ => Close }
-
-  def goto: Parser[AST] = "visit" ~> parentheses(expression) ^^ GoTo
-
-  def submit: Parser[AST] = "submit" ~ "(" ~ ")" ^^ { _ => Submit }
-
   def statement: Parser[AST] = {
-    (require | assignment | reassignment | foreach | functionDef | printLn | goto |
-      fillWith | submit | click | select | close) ^^ {
-        case e => {
-          logger.debug("parsed: " + e)
-          e
-        }
+    (require | assignment | reassignment | foreach | functionDef | printLn | fillWith | click | select) ^^ {
+      case e => {
+        logger.debug("parsed: " + e)
+        e
       }
+    }
   }
 
   def script: Parser[List[AST]] = rep(statement | expression)

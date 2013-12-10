@@ -43,8 +43,6 @@ object AST {
 
   case class XPath(selector: AST) extends Selector
 
-  case class GoTo(url: AST) extends AST
-
   case class Fill(selector: Selector, text: AST) extends AST
 
   case class Click(selector: Selector) extends AST
@@ -54,10 +52,6 @@ object AST {
   case class FunctionDef(name: Symbol, args: List[Symbol], statements: List[AST]) extends AST
 
   case class FunctionCall(name: Symbol, args: List[AST]) extends AST
-
-  case object Close extends AST
-
-  case object Submit extends AST
 
   case class Require(filename: StringFactor) extends AST
 

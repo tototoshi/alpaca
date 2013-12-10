@@ -17,13 +17,13 @@ package alpaca
 
 import AST._
 import com.typesafe.scalalogging.slf4j.Logging
-import org.openqa.selenium.{ StaleElementReferenceException, By }
+import org.openqa.selenium.By
 import java.io.File
 import scala.collection.mutable.{ Set => MutableSet, ListBuffer }
 
 object Interpreter extends Logging {
 
-  private def by(selector: Selector)(implicit environment: Environment): By = {
+  def by(selector: Selector)(implicit environment: Environment): By = {
     val (func, args) = selector match {
       case Name(s) => (By.name _, s)
       case Id(s) => (By.id _, s)
@@ -81,31 +81,11 @@ object Interpreter extends Logging {
           throw new UnsupportedOperationException("'+' is not supported")
         }
       }
-      case GoTo(url) => {
-        environment.driver.get(evaluate(url).get.toString)
-        environment.clearCurrentTargetElement()
-        logger.info(s"go to $url")
-        Value.nullValue
-      }
       case Fill(selector, text) => {
         val element = environment.driver.findElement(by(selector))
         element.sendKeys(evaluate(text).get.toString)
         environment.setCurrentTargetElement(element)
         logger.info(s"fill $selector with $text")
-        Value.nullValue
-      }
-      case Submit => {
-        environment.getCurrentTargetElement.foreach { element =>
-          try {
-            element.submit()
-            environment.clearCurrentTargetElement()
-          } catch {
-            case e: StaleElementReferenceException => {
-              logger.error("The element is stale")
-            }
-          }
-        }
-        logger.info(s"submit")
         Value.nullValue
       }
       case Click(selector) => {
@@ -144,11 +124,6 @@ object Interpreter extends Logging {
         } getOrElse {
           callUserFunc(name, args)
         }
-      }
-      case Close => {
-        environment.driver.close()
-        logger.info("close")
-        Value.nullValue
       }
       case Require(file) => {
         val originalScriptPath = environment.scriptPath

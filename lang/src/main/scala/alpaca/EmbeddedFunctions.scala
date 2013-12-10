@@ -15,9 +15,10 @@
  */
 package alpaca
 
-import org.openqa.selenium.By
+import org.openqa.selenium.{ StaleElementReferenceException, By }
+import com.typesafe.scalalogging.slf4j.Logging
 
-object EmbeddedFunctions {
+object EmbeddedFunctions extends Logging {
 
   def allAsMap: Map[Symbol, List[Value] => Environment => Value] = Map(
     'len -> len,
@@ -27,7 +28,10 @@ object EmbeddedFunctions {
     'find -> find,
     'attr -> attr,
     'text -> text,
-    'assert -> assert
+    'assert -> assert,
+    'visit -> visit,
+    'submit -> submit,
+    'close -> close
   )
 
   def len(args: List[Value])(environment: Environment): Value = {
@@ -96,4 +100,36 @@ object EmbeddedFunctions {
     }
     Value.nullValue
   }
+
+  def close(args: List[Value])(environment: Environment): Value = {
+    environment.driver.close()
+    Value.nullValue
+  }
+
+  def visit(args: List[Value])(environment: Environment): Value = {
+    if (args.size != 1) {
+      throw new InvalidArgumentSizeException('visit, 1, args.size)
+    }
+    val url = Value.asString(args(0))
+    environment.driver.get(url)
+    environment.clearCurrentTargetElement()
+    logger.info(s"visit $url")
+    Value.nullValue
+  }
+
+  def submit(args: List[Value])(environment: Environment): Value = {
+    environment.getCurrentTargetElement.foreach { element =>
+      try {
+        element.submit()
+        environment.clearCurrentTargetElement()
+      } catch {
+        case e: StaleElementReferenceException => {
+          logger.error("The element is stale")
+        }
+      }
+    }
+    logger.info(s"submit")
+    Value.nullValue
+  }
+
 }
