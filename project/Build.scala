@@ -26,7 +26,7 @@ object AlpacaBuild extends Build {
       scalaVersion := "2.10.2",
       resolvers += Resolver.sonatypeRepo("public"),
       libraryDependencies ++= baseDependency ++ Seq(
-      "org.seleniumhq.selenium" % "selenium-java" % "2.37.1",
+      "org.seleniumhq.selenium" % "selenium-java" % "2.38.0",
       "com.github.scopt" %% "scopt" % "3.2.0"
       ),
       scalacOptions ++= Seq("-deprecation", "-language:_")

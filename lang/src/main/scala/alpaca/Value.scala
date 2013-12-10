@@ -31,6 +31,7 @@ object Value {
   val nullValue = Value(UnitType, {})
   def intValue(i: Int) = Value(IntType, i)
   def stringValue(s: String) = Value(StringType, s)
+  def listValue(xs: List[Any]) = Value(ListType, xs)
   val trueValue = Value(BooleanType, true)
   val falseValue = Value(BooleanType, false)
   def webElementValue(elem: WebElement) = Value(WebElementType, elem)
@@ -54,6 +55,14 @@ object Value {
 
   def asWebElement(v: Value): WebElement = v match {
     case Value(WebElementType, elem) => elem.asInstanceOf[WebElement]
+    case Value(AnyType, elem) => {
+      try {
+        elem.asInstanceOf[WebElement]
+      } catch {
+        case e: ClassCastException =>
+          throw new TypeException(s"Can't convert ${v.get} to WebElement")
+      }
+    }
     case _ => throw new TypeException(s"Can't convert ${v.get} to WebElement")
   }
 

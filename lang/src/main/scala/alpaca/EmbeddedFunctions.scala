@@ -22,6 +22,7 @@ import java.util.Date
 import org.openqa.selenium.{ OutputType, TakesScreenshot, By }
 import org.apache.commons.io.FileUtils
 import java.io.File
+import scala.collection.JavaConverters._
 
 object EmbeddedFunctions extends Logging {
 
@@ -31,6 +32,7 @@ object EmbeddedFunctions extends Logging {
     'exit -> exit,
     'accept -> accept,
     'find -> find,
+    'list -> list,
     'attr -> attr,
     'text -> text,
     'assert -> assert,
@@ -75,6 +77,17 @@ object EmbeddedFunctions extends Logging {
     val selector = args(0)
     val elem = environment.driver.findElement(By.cssSelector(Value.asString(selector)))
     Value.webElementValue(elem)
+  }
+
+  def list(args: List[Value])(environment: Environment): Value = {
+    if (args.size != 1) {
+      throw new InvalidArgumentSizeException('list, 1, args.size)
+    }
+    val selector = args(0)
+    val elems = environment.driver.findElements(By.cssSelector(Value.asString(selector)))
+      .asScala
+      .toList
+    Value.listValue(elems)
   }
 
   def attr(args: List[Value])(environment: Environment): Value = {

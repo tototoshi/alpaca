@@ -149,7 +149,7 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
         case cond ~ ifStatements ~ elseStatements => If(cond, ifStatements, elseStatements.getOrElse(Nil))
       }
 
-  def foreach: Parser[AST] = "foreach" ~> parentheses((array | variable) ~ "as" ~ variableName) ~ between("{", script, "}") ^^ {
+  def foreach: Parser[AST] = "foreach" ~> parentheses(expression ~ "as" ~ variableName) ~ between("{", script, "}") ^^ {
     case a ~ _ ~ b ~ c => {
       Foreach(a, b, c)
     }

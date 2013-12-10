@@ -94,7 +94,7 @@ object Alpaca extends Logging {
 
         val expressions: List[AST] = Interpreter.loadFile(config.script)
         logger.info(config.toString)
-        logger.info("Opening brower...")
+        logger.info("Opening browser...")
         val driver = createDriver(config.profile)
 
         if (config.maximize) {
