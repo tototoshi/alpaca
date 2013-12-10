@@ -35,6 +35,13 @@ object Value {
   val falseValue = Value(BooleanType, false)
   def webElementValue(elem: WebElement) = Value(WebElementType, elem)
 
+  def asBoolean(v: Value): Boolean = {
+    v match {
+      case Value(BooleanType, b) => b.asInstanceOf[Boolean]
+      case _ => throw new TypeException(s"Can't convert ${v.get} to bool")
+    }
+  }
+
   def asInt(v: Value): Int = {
     v match {
       case Value(IntType, i) => i.asInstanceOf[Int]

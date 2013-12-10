@@ -12,6 +12,7 @@ object AlpacaBuild extends Build {
   val baseDependency = Seq(
     "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
     "ch.qos.logback" % "logback-classic" % "1.0.13",
+    "commons-io" % "commons-io" % "2.4",
     "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
   )
 

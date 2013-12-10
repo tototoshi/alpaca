@@ -15,8 +15,13 @@
  */
 package alpaca
 
-import org.openqa.selenium.{ StaleElementReferenceException, By }
+import org.openqa.selenium.StaleElementReferenceException
 import com.typesafe.scalalogging.slf4j.Logging
+import java.text.SimpleDateFormat
+import java.util.Date
+import org.openqa.selenium.{ OutputType, TakesScreenshot, By }
+import org.apache.commons.io.FileUtils
+import java.io.File
 
 object EmbeddedFunctions extends Logging {
 
@@ -31,7 +36,8 @@ object EmbeddedFunctions extends Logging {
     'assert -> assert,
     'visit -> visit,
     'submit -> submit,
-    'close -> close
+    'close -> close,
+    'capture -> capture
   )
 
   def len(args: List[Value])(environment: Environment): Value = {
@@ -89,13 +95,16 @@ object EmbeddedFunctions extends Logging {
   }
 
   def assert(args: List[Value])(environment: Environment): Value = {
-    if (args.size != 2) {
-      throw new InvalidArgumentSizeException('attr, 2, args.size)
+    if (args.size > 2) {
+      throw new InvalidArgumentSizeException('assert, 2, args.size)
     }
-    val x = Value.asString(args(0))
-    val y = Value.asString(args(1))
-    if (x != y) {
-      println(s"Assertion failed: $x is not equal to $y.")
+    val pred = Value.asBoolean(args(0))
+
+    if (!pred) {
+      args.lift(1).map(a => Value.asString(a)) match {
+        case Some(msg) => println(s"Assertion failed: $msg")
+        case None => Console.err.println(s"Assertion failed")
+      }
       environment.driver.close()
     }
     Value.nullValue
@@ -129,6 +138,14 @@ object EmbeddedFunctions extends Logging {
       }
     }
     logger.info(s"submit")
+    Value.nullValue
+  }
+
+  def capture(args: List[Value])(environment: Environment): Value = {
+    val timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSS").format(new Date())
+    val filename = new File("screenshot_" + timestamp + ".png")
+    FileUtils.copyFile(environment.driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE), filename)
+    logger.info("Capture: " + filename)
     Value.nullValue
   }
 
