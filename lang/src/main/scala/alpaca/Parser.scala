@@ -62,15 +62,15 @@ object Parser extends RegexParsers with BetweenParser with EmbeddedVariableParse
 
   def url: Parser[AST] = string
 
-  def selector(prefix: Parser[String]): Parser[StringFactor] = prefix ~> parentheses(string)
+  def selector(prefix: Parser[String]): Parser[StringFactor] = prefix ~> string
 
-  def nameSelector: Parser[Selector] = selector("name") ^^ Name
+  def nameSelector: Parser[Selector] = selector("n") ^^ Name
 
-  def linkTextSelector: Parser[Selector] = selector("link") ^^ LinkText
+  def linkTextSelector: Parser[Selector] = selector("t") ^^ LinkText
 
-  def partialLinkTextSelector: Parser[Selector] = selector("partialLink") ^^ PartialLinkText
+  def partialLinkTextSelector: Parser[Selector] = selector("pt") ^^ PartialLinkText
 
-  def xpathSelector = selector("xpath") ^^ XPath
+  def xpathSelector = selector("x") ^^ XPath
 
   def stringSelector: Parser[Selector] = expression ^^ Css
 
