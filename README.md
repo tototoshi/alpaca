@@ -8,7 +8,7 @@ A tiny scripting language for web browser automation.
 #!/usr/bin/env alpaca
 
 visit("https://github.com")
-click(link("Sign in"))
+click(t"Sign in")
 fill("#login_field", "user")
 fill("#password", "password")
 submit()
@@ -25,10 +25,46 @@ var user = "tototoshi"
 ## Function
 
 ### Basic functions
+#### visit
+
 ```ruby
 visit("http://google.com")
-click("#selector")
-fill("#selector", "text...")
+```
+
+#### click
+
+```ruby
+# click by css selector
+click("#id")
+
+# click by xpath 
+click(x"//....")
+
+# click by name
+click(n"username")
+
+# click by link text
+click(t"link text")
+
+# click by partial link text
+click(pt"partial link text")
+```
+
+#### fill
+
+```ruby
+fill("selector", "text...")
+```
+
+#### select
+
+```ruby
+select("selector", value)
+```
+
+#### submit
+
+```ruby
 submit()
 ```
 
