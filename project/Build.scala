@@ -22,7 +22,7 @@ object AlpacaBuild extends Build {
     settings = Defaults.defaultSettings ++ Seq (
       name := "alpaca",
       organization := "com.github.tototoshi",
-      version := "0.1.0-SNAPSHOT",
+      version := "0.1.0",
       scalaVersion := "2.10.2",
       resolvers += Resolver.sonatypeRepo("public"),
       libraryDependencies ++= baseDependency ++ Seq(
@@ -39,7 +39,7 @@ object AlpacaBuild extends Build {
     settings = Defaults.defaultSettings ++ Seq (
       name := "alpaca-test",
       organization := "com.github.tototoshi",
-      version := "0.1.0-SNAPSHOT",
+      version := "0.1.0",
       scalaVersion := "2.10.2",
       libraryDependencies ++= baseDependency
     )
