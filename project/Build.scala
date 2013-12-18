@@ -4,6 +4,8 @@ import com.typesafe.sbt.SbtStartScript
 
 object AlpacaBuild extends Build {
 
+  lazy val _version = "0.1.1" 
+
   lazy val root = Project(
     id = "root",
     base = file(".")
@@ -22,7 +24,7 @@ object AlpacaBuild extends Build {
     settings = Defaults.defaultSettings ++ Seq (
       name := "alpaca",
       organization := "com.github.tototoshi",
-      version := "0.1.0",
+      version := _version,
       scalaVersion := "2.10.2",
       resolvers += Resolver.sonatypeRepo("public"),
       libraryDependencies ++= baseDependency ++ Seq(
@@ -39,7 +41,7 @@ object AlpacaBuild extends Build {
     settings = Defaults.defaultSettings ++ Seq (
       name := "alpaca-test",
       organization := "com.github.tototoshi",
-      version := "0.1.0",
+      version := _version,
       scalaVersion := "2.10.2",
       libraryDependencies ++= baseDependency
     )
