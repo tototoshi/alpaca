@@ -111,8 +111,11 @@ object Alpaca extends Logging {
             driver.close()
             sys.exit(1)
           }
-          case e: AlpacaRuntimeException => {
+          case e: Throwable => {
             println(e.getMessage)
+            if (config.debug) {
+              e.printStackTrace()
+            }
             driver.close()
             sys.exit(1)
           }
