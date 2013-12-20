@@ -39,7 +39,8 @@ object EmbeddedFunctions extends Logging {
     'visit -> visit,
     'submit -> submit,
     'close -> close,
-    'capture -> capture
+    'capture -> capture,
+    'clear -> clear
   )
 
   def len(args: List[Value])(environment: Environment): Value = {
@@ -159,6 +160,15 @@ object EmbeddedFunctions extends Logging {
     val filename = new File("screenshot_" + timestamp + ".png")
     FileUtils.copyFile(environment.driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE), filename)
     logger.info("Capture: " + filename)
+    Value.nullValue
+  }
+
+  def clear(args: List[Value])(environment: Environment): Value = {
+    if (args.size != 1) {
+      throw new InvalidArgumentSizeException('clear, 1, args.size)
+    }
+    val selector = args(0)
+    environment.driver.findElement(By.cssSelector(Value.asString(selector))).clear()
     Value.nullValue
   }
 
