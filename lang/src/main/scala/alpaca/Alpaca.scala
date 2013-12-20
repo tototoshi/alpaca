@@ -49,7 +49,7 @@ object Alpaca extends Logging {
     }
 
     val parser = new scopt.OptionParser[Config]("alpaca") {
-      head("alpaca", "0.1.1")
+      head("alpaca", "0.1.2")
       opt[File]('p', "profile") text "firefox profile" optional () action {
         (x, c) => c.copy(profile = Some(x))
       }

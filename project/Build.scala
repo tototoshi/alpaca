@@ -4,7 +4,7 @@ import com.typesafe.sbt.SbtStartScript
 
 object AlpacaBuild extends Build {
 
-  lazy val _version = "0.1.1" 
+  lazy val _version = "0.1.2" 
 
   lazy val root = Project(
     id = "root",
