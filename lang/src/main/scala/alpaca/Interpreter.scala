@@ -23,6 +23,8 @@ import scala.collection.mutable.{ Set => MutableSet, ListBuffer }
 
 object Interpreter extends LazyLogging {
 
+  val LINE_SEPARATOR = System.getProperty("line.separator");
+
   def by(selector: Selector)(implicit environment: Environment): By = {
     val (func, args) = selector match {
       case Name(s) => (By.name _, s)
@@ -231,7 +233,7 @@ object Interpreter extends LazyLogging {
           x #| y
         }
         logger.debug("Execute: " + process)
-        val out = process.lines.mkString(System.lineSeparator())
+        val out = process.lineStream.mkString(LINE_SEPARATOR)
         Value(StringType, out)
       }
     }
