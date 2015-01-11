@@ -16,12 +16,12 @@
 package alpaca
 
 import AST._
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging._
 import org.openqa.selenium.By
 import java.io.File
 import scala.collection.mutable.{ Set => MutableSet, ListBuffer }
 
-object Interpreter extends Logging {
+object Interpreter extends LazyLogging {
 
   def by(selector: Selector)(implicit environment: Environment): By = {
     val (func, args) = selector match {

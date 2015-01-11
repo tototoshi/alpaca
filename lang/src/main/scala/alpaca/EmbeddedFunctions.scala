@@ -16,7 +16,7 @@
 package alpaca
 
 import org.openqa.selenium.StaleElementReferenceException
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging._
 import java.text.SimpleDateFormat
 import java.util.Date
 import org.openqa.selenium.{ OutputType, TakesScreenshot, By }
@@ -24,7 +24,7 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import scala.collection.JavaConverters._
 
-object EmbeddedFunctions extends Logging {
+object EmbeddedFunctions extends LazyLogging {
 
   def allAsMap: Map[Symbol, List[Value] => Environment => Value] = Map(
     'len -> len,

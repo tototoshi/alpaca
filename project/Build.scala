@@ -4,7 +4,9 @@ import com.typesafe.sbt.SbtStartScript
 
 object AlpacaBuild extends Build {
 
-  lazy val _version = "0.1.2" 
+  lazy val _version = "0.1.3-SNAPSHOT"
+
+  lazy val seleniumVersion = "2.44.0"
 
   lazy val root = Project(
     id = "root",
@@ -12,9 +14,10 @@ object AlpacaBuild extends Build {
   ).aggregate(lang)
 
   val baseDependency = Seq(
-    "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
     "ch.qos.logback" % "logback-classic" % "1.0.13",
     "commons-io" % "commons-io" % "2.4",
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3",
     "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
   )
 
@@ -25,10 +28,10 @@ object AlpacaBuild extends Build {
       name := "alpaca",
       organization := "com.github.tototoshi",
       version := _version,
-      scalaVersion := "2.10.2",
+      scalaVersion := "2.11.5",
       resolvers += Resolver.sonatypeRepo("public"),
       libraryDependencies ++= baseDependency ++ Seq(
-      "org.seleniumhq.selenium" % "selenium-java" % "2.38.0",
+      "org.seleniumhq.selenium" % "selenium-java" % seleniumVersion,
       "com.github.scopt" %% "scopt" % "3.2.0"
       ),
       scalacOptions ++= Seq("-deprecation", "-language:_")
@@ -42,7 +45,7 @@ object AlpacaBuild extends Build {
       name := "alpaca-test",
       organization := "com.github.tototoshi",
       version := _version,
-      scalaVersion := "2.10.2",
+      scalaVersion := "2.11.5",
       libraryDependencies ++= baseDependency
     )
   )

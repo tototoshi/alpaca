@@ -18,7 +18,7 @@ package alpaca
 import scala.collection.mutable.{ Map => MutableMap }
 import org.openqa.selenium.{ WebDriver, WebElement }
 import java.io.File
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging._
 import alpaca.AST.FunctionDef
 
 trait Environment {
@@ -93,7 +93,7 @@ class GlobalEnvironment(val driver: WebDriver, var scriptPath: File) extends Env
 
 }
 
-class LocalEnvironment(private val parent: Environment, var scriptPath: File) extends Environment with Logging {
+class LocalEnvironment(private val parent: Environment, var scriptPath: File) extends Environment with LazyLogging {
 
   val driver: WebDriver = parent.driver
 

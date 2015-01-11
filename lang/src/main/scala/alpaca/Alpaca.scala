@@ -18,9 +18,9 @@ package alpaca
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.{ FirefoxProfile, FirefoxDriver }
 import java.io.File
-import com.typesafe.scalalogging.slf4j._
+import com.typesafe.scalalogging._
 
-object Alpaca extends Logging {
+object Alpaca extends LazyLogging {
 
   case class Config(profile: Option[File], script: File, args: List[String], info: Boolean, debug: Boolean, maximize: Boolean, quit: Boolean)
 

@@ -17,9 +17,9 @@ package alpaca
 
 import scala.util.parsing.combinator.RegexParsers
 import AST._
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging._
 
-trait BetweenParser extends RegexParsers with Logging {
+trait BetweenParser extends RegexParsers with LazyLogging {
 
   def between[A, B, C](p1: Parser[A], p2: Parser[B], p3: Parser[C]): Parser[B] = p1 ~> p2 <~ p3
 
